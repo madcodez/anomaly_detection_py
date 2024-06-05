@@ -1,0 +1,79 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": {
+      "EC2Instance": {
+        "Type": "AWS::EC2::Instance",
+        "Properties": {
+          "InstanceType": "t2.micro",
+          "ImageId": "ami-053b0d53c279acc90",
+          "KeyName": "cloudproject",
+          "SecurityGroupIds": ["sg-09cf8915d5c754c73"],
+          "Tags" : [ {"Key" : "Name", "Value" : "cloudproject_ubuntuserver"} ]
+        }
+      },
+      "S3Bucket": {
+        "Type": "AWS::S3::Bucket",
+        "Properties": {
+          "BucketName": "cloudm03s3bucket1"
+        }
+      },
+      "MyLambdaFunction": {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Handler": "anomaly_detection.handler",
+          "Role": "arn:aws:iam::648786610460:role/lambda_admin",
+          "Code": {
+            "S3Bucket": "cloudlambdas3bucket",
+            "S3Key": "lambda-code.zip"
+          },
+          "Runtime": "python3.11"
+        }
+      },
+      "KinesisStream": {
+        "Type": "AWS::Kinesis::Stream",
+        "Properties": {
+          "Name": "m03p02_raw_data_stream",
+          "ShardCount": 1
+        }
+      },
+      "DynamoDBTable": {
+        "Type": "AWS::DynamoDB::Table",
+        "Properties": {
+          "TableName": "m03p02_anomaly_data",
+          "AttributeDefinitions": [
+            {
+              "AttributeName": "deviceid",
+              "AttributeType": "S"
+            },
+            {
+                "AttributeName": "timestamp",
+                "AttributeType": "S"
+            }
+             
+          ],
+          "KeySchema": [
+            {
+              "AttributeName": "deviceid",
+              "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "timestamp",
+                "KeyType": "RANGE"
+            }
+          ],
+          "ProvisionedThroughput": {
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+          }
+        }
+      },
+      "SNSTopic": {
+        "Type": "AWS::SNS::Topic",
+        "Properties": {
+          "DisplayName": "m03p02_anomaly_alerts",
+          "TopicName": "m03p02_anomaly_alerts"
+        }
+      }
+    }
+  }
+  
