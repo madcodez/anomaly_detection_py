@@ -2,11 +2,11 @@ In this project we will be doing the step by step automation of Anomaly detectio
 
 Skills & Tools Covered
 
-Automating the setup of anomaly detection
-EC2
-Kinesis
-DynamoDB
-SNS using CloudFormation templates
-Provisioning an S3 bucket using CloudFormation
-Deploying the contents of S3 using CodeDeploy into the EC2 instance
+Automating the setup of anomaly detection,
+EC2,
+Kinesis,
+DynamoDB,
+SNS using CloudFormation templates,
+Provisioning an S3 bucket using CloudFormation,
+Deploying the contents of S3 using CodeDeploy into the EC2 instance,
 Provisioning the Lambda handler using Cloud Formation
